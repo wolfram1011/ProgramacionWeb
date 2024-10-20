@@ -20,11 +20,13 @@ header("Content-Type: application/json");
 
 $metodo = $_SERVER['REQUEST_METHOD'];
 
+
 $path = isset($_SERVER['PATH_INFO'])?$_SERVER['PATH_INFO']:'/';
 
 $buscarId = explode('/',$path);
 
-$id = ($path! == '/') ? end($buscarId):null;
+$id = ($path!=='/') ? end($buscarId):null;
+
 
 switch($metodo){
 	//SELECT
@@ -33,6 +35,7 @@ switch($metodo){
 		break;
 	//INSERT
 	case 'POST':
+        echo    "COnsulta de registros";
 		insertar($conexion);
 		break;
 	// UPDATE
@@ -42,6 +45,7 @@ switch($metodo){
 	// DELETE
 	case 'DELETE':
 		borrar($conexion,$id);
+        echo "Borrado de registros - DELETE";
 		break;
 	default:
 		echo "Método no permitido";
@@ -50,8 +54,10 @@ switch($metodo){
 
 }
 
-function consulta($conexion, $id){
-	$sql = ($id  === null)? "SELECT * FROM usuarios": "SELECT * FROM usuarios WHERE id = $id";
+
+
+function consulta($conexion,$id){
+	$sql = ($id===null)? "SELECT * FROM usuarios": "SELECT * FROM usuarios WHERE id = $id";
 	$resultado = $conexion -> query($sql);
 
 	if($resultado){
@@ -64,6 +70,8 @@ function consulta($conexion, $id){
 	}
 	
 }
+
+
 
 function insertar($conexion){
 
@@ -82,18 +90,16 @@ function insertar($conexion){
 
 	}
 
-
-
 }
 
 
 function borrar($conexion,$id){
 
-
+    echo "El id a borrar es: ". $id;
 	$sql = "DELETE FROM usuarios WHERE id = $id";
 	$resultado = $conexion -> query($sql);
 
-	if($resultado){
+	if($resultado){        
 		echo json_encode(array('mensaje'=>'Usuario borrado'));
 	}else{
 
@@ -101,8 +107,9 @@ function borrar($conexion,$id){
 
 	}
 
-
 }
+
+
 
 function actualizar($conexion,$id){
 
@@ -125,7 +132,6 @@ function actualizar($conexion,$id){
 	
 	
 }
-
 
 
 ?>
